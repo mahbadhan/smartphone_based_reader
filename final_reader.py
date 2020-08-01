@@ -4,7 +4,7 @@ im = Image.open('strip_photo.JPG')
 
 width, height = im.size
 print(im.size)
-# im.show()
+im.show()
 
 x = width / 2
 y = height / 2
@@ -41,7 +41,7 @@ def segment(image):
     upper = np.array([255, 255, 255])
     mask = cv2.inRange(image, lower, upper)
     result = cv2.bitwise_and(result, result, mask=mask)
-    cv2.imshow('result', result)
+    cv2.imshow('masked image of T and C line', result)
     cv2.waitKey()
 
     return result
@@ -97,13 +97,10 @@ df.head()
 cdf = df[['ratio', 'result']]
 cdf.head(9)
 
-viz = cdf[['ratio', 'result']]
-viz.hist()
-#plt.show()
 
 plt.scatter(cdf.ratio, cdf.result,  color='blue')
 plt.xlabel("ratio")
-plt.ylabel("result")
+plt.ylabel("concenration")
 #plt.show()
 
 msk = np.random.rand(len(df)) < 0.8
@@ -112,7 +109,7 @@ test = cdf[~msk]
 
 plt.scatter(train.ratio, train.result,  color='blue')
 plt.xlabel("ratio")
-plt.ylabel("result")
+plt.ylabel("concentration")
 #plt.show()
 
 from sklearn import linear_model
@@ -121,14 +118,14 @@ train_x = np.asanyarray(train[['ratio']])
 train_y = np.asanyarray(train[['result']])
 regr.fit(train_x, train_y)
 
-print('Coefficients: ', regr.coef_)
-print('Intercept: ',regr.intercept_)
+print('Coefficients of the ratio-conc plot ', regr.coef_)
+print('Intercept of ratio-conc plot ',regr.intercept_)
 
 plt.scatter(train.ratio, train.result,  color='blue')
 plt.plot(train_x, regr.coef_[0][0]*train_x + regr.intercept_[0], '-r')
-plt.xlabel("ratio")
-plt.ylabel("result")
-#plt.show()
+plt.xlabel("ratio of intensity at T to C line")
+plt.ylabel("concentration of analyte")
+plt.show()
 
 from sklearn.metrics import r2_score
 
