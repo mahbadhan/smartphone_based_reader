@@ -116,7 +116,7 @@ plt.xlabel("ratio")
 plt.ylabel("concenration")
 #plt.show()
 
-#training and test data classified from the file
+#training data and test data classified from the file
 msk = np.random.rand(len(df)) < 0.8
 train = cdf[msk]
 test = cdf[~msk]
