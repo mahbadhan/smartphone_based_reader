@@ -2,6 +2,7 @@ from PIL import Image
 
 im = Image.open('strip_photo.JPG')
 
+#size and image of the LFA strip
 width, height = im.size
 print(im.size)
 im.show()
@@ -9,6 +10,7 @@ im.show()
 x = width / 2
 y = height / 2
 
+#cropping the image around the T and C line
 if width > height:
     cropp = im.crop((x - 200, y - 200, x, y + 350))
     cropp2 = im.crop((x, y - 200, x + 200, y + 350))
@@ -21,11 +23,12 @@ else:
     cropp2.show()
 
 
-
+#two separate images of L line and C line
 cropp.save("b1_crop.jpg")
 cropp2.save("b2_crop.jpg")
 
 
+#segmenting the cropped lines such that only the coloured lines are masked out
 import cv2
 
 import numpy as np
@@ -53,6 +56,10 @@ cv2.imwrite('C:/Users/Mahima Badhan/PycharmProjects/untitled/mask1.jpg', masked1
 masked2 = segment(image2)
 cv2.imwrite('C:/Users/Mahima Badhan/PycharmProjects/untitled/mask2.jpg', masked2)
 
+
+
+#Calculating the sum of red pixels intesity of the lines
+#the suum of red pixels intensity is directly proportional to the concentration of analyte.
 from PIL import Image
 
 im11 = Image.open('mask1.jpg')
@@ -79,30 +86,37 @@ print("summation of red pixels intensity at T line is", T)
 C = intensity(im22)
 print("summation of red pixels intensity  at C line is", C)
 
+
+#calculating the ratio of red pixels intensity of T line to C line
+#Ratio is also proportional to the conc. of target analyte
+#the ratio gives a normalised result even if the image is clicked in different illuminating conditions.
 ratio1 = T / C
 print("ratio of test to control line signal intensity is", ratio1)
 
 
+
+#Calibration using Machine Learning
 import matplotlib.pyplot as plt
 import pandas as pd
 
 import numpy as np
 
 
-
-
+#the known data  file imported
+#File containing data regarding the concentration of analytes of known samples and their T/C intensity ratio
 df = pd.read_csv("testfile.csv")
 
 df.head()
 cdf = df[['ratio', 'result']]
 cdf.head(9)
 
-
+#plotting
 plt.scatter(cdf.ratio, cdf.result,  color='blue')
 plt.xlabel("ratio")
 plt.ylabel("concenration")
 #plt.show()
 
+#training and test data classified from the file
 msk = np.random.rand(len(df)) < 0.8
 train = cdf[msk]
 test = cdf[~msk]
@@ -112,6 +126,10 @@ plt.xlabel("ratio")
 plt.ylabel("concentration")
 #plt.show()
 
+
+#Machine learning algorithm to apply linear regression model on the train data.
+#coefficient and intercept obtained from the regression analysis
+#plotting the graph
 from sklearn import linear_model
 regr = linear_model.LinearRegression()
 train_x = np.asanyarray(train[['ratio']])
@@ -127,6 +145,8 @@ plt.xlabel("ratio of intensity at T to C line")
 plt.ylabel("concentration of analyte")
 plt.show()
 
+#Machine learning algorithm to predict the concentration of analyte for the test data
+#Calculating the error among the predicted conc. and the actual conc. of the test data
 from sklearn.metrics import r2_score
 
 test_x = np.asanyarray(test[['ratio']])
@@ -136,6 +156,6 @@ print("Mean absolute error: %.2f" % np.mean(np.absolute(test_y_hat - test_y)))
 print("Residual sum of squares (MSE): %.2f" % np.mean((test_y_hat - test_y) ** 2))
 print("R2-score: %.2f" % r2_score(test_y_hat , test_y) )
 
-
+#For every T/C intensity ratios, the concentration of the analyte is predicted using the parameters of the linear regression analysis
 z = regr.coef_[0][0] * ratio1 + regr.intercept_[0]
 print("the concentration of analyte in the sample is", z)
