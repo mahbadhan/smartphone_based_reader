@@ -11,16 +11,12 @@ x = width / 2
 y = height / 2
 
 #cropping the image around the T and C line
-if width > height:
-    cropp = im.crop((x - 200, y - 200, x, y + 350))
-    cropp2 = im.crop((x, y - 200, x + 200, y + 350))
-    # cropp.show()
-    # cropp2.show()
-else:
-    cropp = im.crop((x -200, y-200 , x + 200, y ))
-    cropp2 = im.crop((x -200, y , x + 200, y + 200 ))
-    cropp.show()
-    cropp2.show()
+
+cropp = im.crop((x - 200, y - 200, x, y + 350))
+cropp2 = im.crop((x, y - 200, x + 200, y + 350))
+cropp.show()
+cropp2.show()
+
 
 
 #two separate images of L line and C line
