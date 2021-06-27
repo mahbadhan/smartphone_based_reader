@@ -5,7 +5,7 @@ im = Image.open('C:/Users/Mahima Badhan/PycharmProjects/untitled/30.jpg')
 #size and image of the LFA strip
 width, height = im.size
 print(im.size)
-im.show()
+#im.show()
 
 x = width / 2
 y = height / 2
@@ -96,7 +96,7 @@ print("summation of red pixels intensity  at T line is", T)
 #Ratio is also proportional to the conc. of target analyte
 #the ratio gives a normalised result even if the image is clicked in different illuminating conditions.
 ratio1 = T / C
-print("ratio of test to control line signal intensity is", ratio1)
+#print("ratio of test to control line signal intensity is", ratio1)
 
 #Calibration using Machine Learning
 import matplotlib.pyplot as plt
@@ -147,7 +147,7 @@ plt.scatter(train.ratio, train.result,  color='blue')
 plt.plot(train_x, regr.coef_[0][0]*train_x + regr.intercept_[0], '-r')
 plt.xlabel("ratio of intensity at T to C line")
 plt.ylabel("concentration of analyte")
-plt.show()
+#plt.show()
 
 #Machine learning algorithm to predict the concentration of analyte for the test data
 #Calculating the error among the predicted conc. and the actual conc. of the test data
@@ -157,9 +157,9 @@ from sklearn.metrics import r2_score
 test_x = np.asanyarray(test[['ratio']])
 test_y = np.asanyarray(test[['result']])
 test_y_hat = regr.predict(test_x)
-print("Mean absolute error: %.2f" % np.mean(np.absolute(test_y_hat - test_y)))
-print("Residual sum of squares (MSE): %.2f" % np.mean((test_y_hat - test_y) ** 2))
-print("R2-score: %.2f" % r2_score(test_y_hat , test_y) )
+#print("Mean absolute error: %.2f" % np.mean(np.absolute(test_y_hat - test_y)))
+#print("Residual sum of squares (MSE): %.2f" % np.mean((test_y_hat - test_y) ** 2))
+#print("R2-score: %.2f" % r2_score(test_y_hat , test_y) )
 
 #For every T/C intensity ratios, the concentration of the analyte is predicted using the parameters of the linear regression analysis
 z = regr.coef_[0][0] * ratio1 + regr.intercept_[0]
