@@ -87,9 +87,9 @@ def intensity(imm):
 
 
 C = intensity(im11)
-print("summation of red pixels intensity at C line is", C)
+#print("summation of red pixels intensity at C line is", C)
 T = intensity(im22)
-print("summation of red pixels intensity  at T line is", T)
+#print("summation of red pixels intensity  at T line is", T)
 
 
 #calculating the ratio of red pixels intensity of T line to C line
